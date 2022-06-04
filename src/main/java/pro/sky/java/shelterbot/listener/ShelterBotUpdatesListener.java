@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+
+import static pro.sky.java.shelterbot.CommandNames.*;
 
 @Service
 public class ShelterBotUpdatesListener implements UpdatesListener {
@@ -43,9 +46,15 @@ public class ShelterBotUpdatesListener implements UpdatesListener {
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
+    private final String[][] buttons = {{INFO_COMMAND.getCommandName(), HOW_WORK_COMMAND.getCommandName()},
+            {SAFETY_COMMAND.getCommandName(), GIVE_CONTACTS_COMMAND.getCommandName(), CALL_EMPLOYEE_COMMAND.getCommandName()}};
+
     private void sendMessage(String messageText, long chatId) {
         TelegramBot bot = new TelegramBot(token);
         SendMessage message = new SendMessage(chatId, messageText);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup(buttons);
+        keyboardMarkup.resizeKeyboard(true);
+        message.replyMarkup(keyboardMarkup);
         SendResponse response = bot.execute(message);
     }
 
@@ -72,5 +81,6 @@ public class ShelterBotUpdatesListener implements UpdatesListener {
         }
         sendMessage(response, chatId);
     }
+
 
 }
