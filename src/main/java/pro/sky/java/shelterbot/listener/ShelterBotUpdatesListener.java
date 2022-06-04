@@ -3,6 +3,7 @@ package pro.sky.java.shelterbot.listener;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +39,6 @@ public class ShelterBotUpdatesListener implements UpdatesListener {
             Integer chatId = Math.toIntExact(update.message().chat().id());
             Long id = Long.valueOf(update.message().messageId());
             parseMessage(update.message().text(), chatId);
-
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
@@ -54,8 +55,17 @@ public class ShelterBotUpdatesListener implements UpdatesListener {
             case "/start":
                 response = "Приветственное сообщение";
                 break;
-            case "Ёся":
-                response = "Пидр";
+            case "/info":
+                response = "Узнать информацию о приюте";
+                break;
+            case "/how_the_shelter_works":
+                response = "расписание работы приюта и адрес, схему проезда";
+                break;
+            case "/safety_precautions":
+                response = "рекомендации о технике безопасности на территории приюта";
+                break;
+            case "/give_contacts":
+                response = "принять и записать контактные данные для связи";
                 break;
             default:
                 response = "Я не понял, что ты сказал, а кто-то не написал часть кода которая зовёт оператора. Сорян";
