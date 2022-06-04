@@ -34,23 +34,33 @@ public class ShelterBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
-            TelegramBot bot = new TelegramBot(token);
             Integer chatId = Math.toIntExact(update.message().chat().id());
             Long id = Long.valueOf(update.message().messageId());
-            String messageText = parseMessage(update.message().text(), chatId);
-            SendMessage message = new SendMessage(chatId, messageText);
-            SendResponse response = bot.execute(message);
+            parseMessage(update.message().text(), chatId);
 
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
-    public String parseMessage(String messageText, long chatId) {
+    private void sendMessage(String messageText, long chatId) {
+        TelegramBot bot = new TelegramBot(token);
+        SendMessage message = new SendMessage(chatId, messageText);
+        SendResponse response = bot.execute(message);
+    }
+
+    public void parseMessage(String messageText, long chatId) {
         String response = "";
-        if (messageText.equals("/start")) {
-            response = "Приветственное сообщение";
+        switch (messageText) {
+            case "/start":
+                response = "Приветственное сообщение";
+                break;
+            case "Ёся":
+                response = "Пидр";
+                break;
+            default:
+                response = "Я не понял, что ты сказал, а кто-то не написал часть кода которая зовёт оператора. Сорян";
         }
-        return response;
+        sendMessage(response, chatId);
     }
 
 }
